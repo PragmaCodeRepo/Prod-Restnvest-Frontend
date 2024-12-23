@@ -2,8 +2,6 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import axios from 'axios';
 import { FaChartLine, FaBalanceScale } from 'react-icons/fa';
 import BaseURL from './ApiConfig/BaseURL';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 import { AuthContext } from '../Context/AuthContext'; // Import AuthContext
 
 const CompanyOwnership = () => {
@@ -40,24 +38,7 @@ const CompanyOwnership = () => {
     fetchOwnershipData();
   }, []);
 
-  const downloadPDF = () => {
-    const input = reportRef.current;
-
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Add username and title at the top of the PDF
-      pdf.text(`Report for: ${user?.username || 'Guest'}`, 10, 10);
-      pdf.text('Company Ownership Report', 10, 20);
-
-      // Add the content below the title
-      pdf.addImage(imgData, 'PNG', 0, 30, imgWidth, imgHeight);
-      pdf.save(`${user?.username || 'Guest'}_Company_Ownership_Report.pdf`);
-    });
-  };
+  
 
   if (loading) {
     return <div className="text-center py-10 text-lg font-semibold">Loading...</div>;
@@ -136,9 +117,7 @@ const CompanyOwnership = () => {
           </table>
         </div>
       </div>
-      <button onClick={downloadPDF} className="mt-6 px-6 py-2 bg-[#3892BB] text-white font-bold rounded hover:bg-teal-500">
-        Download PDF
-      </button>
+      
     </div>
   );
 };
